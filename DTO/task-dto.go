@@ -25,3 +25,7 @@ type TaskDetailsDto struct {
 	Title string `json:"title"`
 	Description string `json:"description"`
 }
+
+type ApproveTaskDto struct {
+	TaskId uint `json:"taskId"`
+}

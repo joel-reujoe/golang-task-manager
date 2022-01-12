@@ -157,3 +157,50 @@ func GetTaskByUserId(c *gin.Context){
 
 
 }
+
+func AssignReviewerToUser(c *gin.Context){
+
+	var assignRevierDto taskmanager.AssignTaskToReviewerDto
+	if c.MustGet("userType") != taskmanagerModel.Admin {
+		c.JSON(http.StatusUnauthorized, gin.H{"message":"Please login as admin"})
+		return
+	}
+
+	if err := c.ShouldBindJSON(&assignRevierDto); err != nil{
+		c.JSON(http.StatusUnprocessableEntity,"Incorrect Parameters Provided")
+		return
+	}
+
+
+	dbConn, ok := c.MustGet("dbConn").(*gorm.DB)
+	 if !ok {
+		c.JSON(http.StatusInternalServerError,"Could not connect to db")
+		return
+	}
+
+	if c.MustGet("userId").(uint64) > 0{
+
+		reviewerTasks := []taskmanagerModel.ReviewersTask{}
+
+		var reviewers []taskmanagerModel.User
+
+		dbConn.Find(&reviewers, assignRevierDto.ReviewerId)
+		for i := 0; i<len(assignRevierDto.ReviewerId);i++{
+				if reviewers[i].UserType == taskmanagerModel.Reviewer{
+				reviewerTask := taskmanagerModel.ReviewersTask{
+					UserId: assignRevierDto.UserId,
+					ReviewerId: assignRevierDto.ReviewerId[i],
+				}
+
+				reviewerTasks = append(reviewerTasks,reviewerTask)
+			}
+		}
+		dbConn.Create(reviewerTasks)
+		c.JSON(http.StatusOK, gin.H{"message":"Reviewers assigned to user"})
+		return
+		
+	}else{
+		c.JSON(http.StatusNotFound,gin.H{"message":"Please login again"})
+		return
+	}
+}

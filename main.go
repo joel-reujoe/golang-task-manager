@@ -38,6 +38,11 @@ func main(){
 	router.POST("/admin/user",taskmanager.CreateUser)
 	router.GET("/user/:userId",taskmanager.GetUserById)
 	router.GET("/admin/:userId/tasks",taskmanager.GetTaskByUserId)
+	router.POST("/admin/assignReviewers",taskmanager.AssignReviewerToUser)
+	router.GET("/reviewer/users",taskmanager.GetAssignedUsers)
+	router.PUT("/reviewer/approve-task",taskmanager.ApproveTask)
+	router.GET("/reviewer/:userId/tasks",taskmanager.GetReviewerTaskByUserId)
+
 
 	router.Run(":8000")
 

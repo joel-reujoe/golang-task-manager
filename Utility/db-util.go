@@ -8,6 +8,7 @@ import (
 func RunMigration(db *gorm.DB){
 	db.AutoMigrate(&taskmanager.User{})
 	db.AutoMigrate(&taskmanager.Task{})
+	db.AutoMigrate(&taskmanager.ReviewersTask{})
 
 }
 

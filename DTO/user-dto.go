@@ -24,3 +24,12 @@ type GetUserByIdResponseDto struct {
 type GetTaskByUserIdDto struct {
 	UserId uint `uri:"userId"`
 } 
+
+type AssignTaskToReviewerDto struct {
+	UserId uint `json:"userId"`
+	ReviewerId []uint `json:"reviewerId"`
+}
+
+type GetReviewerTaskByUserId struct{
+	UserId uint `uri:"userId"`
+}
